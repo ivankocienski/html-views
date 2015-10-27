@@ -73,12 +73,27 @@
 				 :body "hey"))))
 
 
-(defmacro encapsulate (&body body)
+(defun encapsulate (&rest body)
+  (mapcar (lambda (n)
+		 (if (constantp n)
+		     (lambda (_) (declare (ignore _)) (format t "~a" n))
+		     n))
+	       body))
+
+
+
+
+#|
+(defun encapsulate (&body body)
   (let ((functionified (mapcar (lambda (n)
 		 (if (constantp n)
-		     (lambda () (format t "~s" n))
+		     (lambda () (format t "~a" n))
 		     n))
 	       body)))
-    `(lambda ()
+    (list
        ,@functionified)))
-  
+|#
+
+(defun yeah ()
+  (defun oh-fiddly ()
+    (format t "Hello")))
