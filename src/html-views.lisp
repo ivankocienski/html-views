@@ -1,20 +1,5 @@
 (in-package :html-view)
 
-;;(defun tag-attributes (s &rest opts)
-;;  (if opts
-;;      (let ((name (string-downcase (car opts)))
-;;	    (value (cadr opts))
-;;	    (rest (cddr opts)))
-;;	(if value
-;;	    (format s
-;;		    " \"~a\"=\"~a\""
-;;		    name
-;;		    (if (eq (type-of value) 'boolean)
-;;			name
-;;			value)))
-;;	(if rest (apply #'tag-attributes s rest))))
-;;  s)
-
 (defun compose-tag (s name &key (args nil) (body nil) (closed nil))
   (labels ((output-body (b)
 	     (cond
@@ -61,24 +46,6 @@
     ("em"    . nil)
     ("h1"    . nil)))
 
-;;(defmacro maccy (s &body body)
-;;  (let ((mappers (map 'list
-;;		      (lambda (l)
-;;			(let ((name (car l)) (closed (cdr l)))
-;;			  (if closed
-;;			      (list (intern (string-upcase name))
-;;				    '(&key (args nil) (body nil))
-;;				    (list 'compose-tag s name :args 'args :body 'body :closed t))
-			  
-;;			      (list (intern (string-upcase name))
-;;				    '(&key (args nil) (body nil))
-;;				    (list 'compose-tag s name :args 'args :body 'body)))))
-		      
-;;		      +TAG-NAMES+)))
-    
-;;    `(labels (,@mappers)
-;;       ,@body)))
-
 (defun mappers-for-tags (stream-arg)
   (map 'list
        (lambda (l)
@@ -101,12 +68,18 @@
 	 ,@body)))
 
 (defmacro capture-to-string (&body body)
-  (let ((mappers (mappers-for-tags 's)))
-    
-    `(with-output-to-string (s)
-       (labels (,@mappers)
+  (let ((s (gensym)))
+    `(with-output-to-string (,s)
+       (with-defined-tags ,s)
 	 ,@body)))
-  )
+  
+
+;;(defmacro capture-to-string (&body body)
+;;  (let ((mappers (mappers-for-tags 's)))
+    
+;;    `(with-output-to-string (s)
+;;       (labels (,@mappers)
+;;	 ,@body))))
   
 
 

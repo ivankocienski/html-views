@@ -71,3 +71,14 @@
 			    (tag s
 				 "em"
 				 :body "hey"))))
+
+
+(defmacro encapsulate (&body body)
+  (let ((functionified (mapcar (lambda (n)
+		 (if (constantp n)
+		     (lambda () (format t "~s" n))
+		     n))
+	       body)))
+    `(lambda ()
+       ,@functionified)))
+  
