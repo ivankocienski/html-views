@@ -97,3 +97,30 @@
 (defun yeah ()
   (defun oh-fiddly ()
     (format t "Hello")))
+
+
+
+
+
+(defmacro with-defined-tags (s &body body)
+  (let ((mappers (mappers-for-tags s)))
+    
+    `(labels (,@mappers
+	      (contains (&rest body)
+		(mapcar (lambda (n)
+			  (if (constantp n)
+			      (lambda () (format ,s "~a" n))
+			      n))
+			body))
+		)
+	 ,@body)))
+
+
+
+(defmacro hoi (s)
+  `(format ,s "hello!~%"))
+
+(defmacro hoihoi ()
+  (let ((s (gensym)))
+    `(with-output-to-string (,s)
+       (hoi ,s))))

@@ -2,17 +2,18 @@
 
 (defconstant +TAG-NAMES+
   ;; ( name . closed)
-  '(("div"   . nil)
-    ("input" . T )
-    ("p"     . nil)
-    ("br"    . T)
-    ("hr"    . T)
-    ("span"  . nil)
-    ("a"     . nil)
-    ("em"    . nil)
-    ("h1"    . nil)))
-
-(defparameter *tag-functions* nil)
+  '((div   . nil)
+    (input . T )
+    (p     . nil)
+    (br    . T)
+    (hr    . T)
+    (span  . nil)
+    (a     . nil)
+    (em    . nil)
+    (h1    . nil)
+    (ul    . nil)
+    (li    . nil)
+    (h3    . nil)))
 
 (defun tag-attributes (s opts)
   (if opts
@@ -28,67 +29,37 @@
 			value)))
 	(if rest (tag-attributes s rest)))))
 
-(setf *tag-functions*
-      (loop for tag in +TAG-NAMES+ collect
-	   (let* ((name (car tag))
-		  (closed (cdr tag))
-		  (method (if closed
-			      ;; closed tag
-			      (lambda (stream args body)
-				(declare (ignore body))
-				(format stream "<~a" name)
-				(if args (tag-attributes stream args))		           
-				(format stream " />"))
+(defmacro with-defined-tags-for-stream (s &body body)
+  `(macrolet (,@(mapcar (lambda (tl)
+			  (let* ((name (car tl))
+				 (name-s (string-downcase (format nil "~a" name)))
+				 (closed (cdr tl)))
 
-			      ;; tag with content
-			      (lambda (stream args body)
-				(format stream "<~a" name)
-				(if args (tag-attributes stream args))
-				(format stream ">")
-				(dolist (b body)
-				  (funcall b stream))
-				(format stream "</~a>" name)))))
-	     
-	     (cons name method))))
+			    (list name `(&optional (args nil) &body body)
+				  (if closed `(declare (ignore body)))
+				  
+				  (if closed
 
+				      ``(progn
+					  (format ,',s ,',(format nil "<~a" name-s))
+					  (tag-attributes ,',s ,args)
+					  (format ,',s " />"))
+				      
+				      ``(progn
+					  (format ,',s ,',(format nil "<~a" name-s))
+					  (tag-attributes ,',s ,args)
+					  (format ,',s ">")
+					  (progn ,@body)
+					  (format ,',s ,',(format nil "</~a>" name-s))
+					  )))))
+			
+			+TAG-NAMES+))
+     ,@body))
 
-
-
-
-(defun mappers-for-tags (stream-arg)
-  (mapcar (lambda (tf)
-	    
-	    (let ((name   (car tf))
-		  (method (cdr tf)))
-	      
-	      (list (intern (string-upcase name))
-		    '(&key (args nil) (body nil))
-		    (list 'funcall method stream-arg 'args 'body))))
-	  
-	  *tag-functions*))
-
-
-
- 
-(defmacro with-defined-tags (s &body body)
-  (let ((mappers (mappers-for-tags s)))
-    
-    `(labels (,@mappers)
-	 ,@body)))
-
-(defmacro capture-to-string (&body body)
+(defmacro render (&body body)
   (let ((s (gensym)))
     `(with-output-to-string (,s)
-       (with-defined-tags ,s
-	 ,@body))))
-  
-
-;;(defmacro capture-to-string (&body body)
-;;  (let ((mappers (mappers-for-tags 's)))
-    
-;;    `(with-output-to-string (s)
-;;       (labels (,@mappers)
-;;	 ,@body))))
-  
-
-
+       (macrolet ((str (text) `(format ,',s "~a" ,text)))
+	 (with-defined-tags-for-stream ,s
+	   ,@body))))
+  )
