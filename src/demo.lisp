@@ -1,6 +1,20 @@
 (in-package :html-view)
 
+(defview :basic
+  (h1 nil (str "hello?")))
 
+(render :basic)
+
+
+
+(defview :with-vars (:name)
+  (h1 nil (str (format nil "Hello ~s!" name))))
+
+(render :with-bars '((:names . "alpha")))
+
+
+
+#|
 (defun used-in (posts)
   (render
 
@@ -18,3 +32,4 @@
 	
 	(p nil (str "Sorry, there are no posts"))))
   )
+|#

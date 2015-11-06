@@ -7,6 +7,7 @@
   :serial t
   ;;:depends-on ()
   :components ((:file "src/package")
+	       (:file "src/view-db")
 	       (:file "src/html-views")
 	       (:file "src/demo")))
 

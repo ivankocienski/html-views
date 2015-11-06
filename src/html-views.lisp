@@ -56,10 +56,24 @@
 			+TAG-NAMES+))
      ,@body))
 
-(defmacro render (&body body)
-  (let ((s (gensym)))
-    `(with-output-to-string (,s)
-       (macrolet ((str (text) `(format ,',s "~a" ,text)))
-	 (with-defined-tags-for-stream ,s
-	   ,@body))))
+(defmacro with-defined-local-pullouts (locals locals-var &body body)
+  (if locals
+      `(let (,@(mapcar (lambda (n) (list (intern (format nil "~a" n))
+					 (list 'cdr (list 'assoc n locals-var)))) locals))
+	 ,@body)
+      `(progn ,@body))
   )
+
+(defmacro defview (name &optional (local-var-names nil) &body body)
+  `(register-view ,name
+		  (lambda (html-output-stream local-vars)
+		    (macrolet ((str (text) `(format html-output-stream "~a" ,text)))
+		      (with-defined-local-pullouts ,local-var-names local-vars
+			(with-defined-tags-for-stream html-output-stream
+			  ,@body))))))
+
+
+
+(defmacro xxx ()
+  `(dotimes (n 3)
+    (format t "YOLO")))
