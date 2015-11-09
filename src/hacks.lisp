@@ -124,3 +124,8 @@
   (let ((s (gensym)))
     `(with-output-to-string (,s)
        (hoi ,s))))
+
+(defmacro xxx ((arg &key thing) &body body)
+  `(progn
+     (format t "~a  thing=~a~%" ,arg ,thing)
+     ,@body))

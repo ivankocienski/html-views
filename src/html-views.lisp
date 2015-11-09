@@ -77,29 +77,27 @@
       `(progn ,@body))
   )
 
-(defmacro defview (name &optional (local-var-names nil) &body body)
+(defmacro defview ((name &key locals) &body body)
   `(register-view ,name
 		  (lambda (html-output-stream local-vars)
 		    (macrolet ((str (text) `(format html-output-stream "~a" ,text)))
-		      (with-defined-local-pullouts ,local-var-names local-vars
+		      (with-defined-local-pullouts ,locals local-vars
 			(with-defined-tags-for-stream html-output-stream ,+TAG-NAMES+
 			  ,@body))))))
 
 
 
-(defmacro deflayout (name &optional (local-var-names nil) &body body)
-  (declare (ignore name))
-  `(set-layout (lambda (html-output-stream local-vars yield-function)
+(defmacro deflayout ((name &key locals default) &body body)
+  `(register-layout ,name (lambda (html-output-stream local-vars yield-function)
 		 
 		 (macrolet ((str (text) `(format html-output-stream "~a" ,text))
 			    (yield () `(funcall yield-function html-output-stream local-vars)))
 		   
-		   (with-defined-local-pullouts ,local-var-names local-vars
+		   (with-defined-local-pullouts ,locals local-vars
 		     (with-defined-tags-for-stream html-output-stream ,+LAYOUT-TAG-NAMES+
 		       (with-defined-tags-for-stream html-output-stream ,+TAG-NAMES+
-			 ,@body))))))
+			 ,@body)))))
+		    ,default)
   )
 
-(defmacro xxx ()
-  `(dotimes (n 3)
-    (format t "YOLO")))
+

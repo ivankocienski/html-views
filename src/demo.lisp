@@ -7,14 +7,14 @@
 
 
 
-(defview :with-vars (:name)
-  (h1 nil (str (format nil "Hello ~s!" name))))
+(defview (:with-vars :locals (:name))
+  (h1 nil (str (format nil "Hello ~a!" name))))
 
-(render :with-bars '((:names . "alpha")))
+(render :with-vars :locals '((:name . "alpha")))
 
 
 
-(deflayout :application ()
+(deflayout (:application :default t)
   (html nil
 	(head nil
 	      (title nil (str "An application"))
@@ -27,6 +27,16 @@
 		   (p nil (str "Copyright &copy; Me, Inc. 2015."))))))
 
 
+(deflayout (:app-2)
+	   (html nil
+		 (head nil
+		       (title nil (str "Another thingie here")))
+
+		 (body nil
+		       (yield)
+		       (div '(:id "footer")
+			    (p nil (str "Bla bla"))))))
+		       
 
 
 
