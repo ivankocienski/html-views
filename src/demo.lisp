@@ -14,6 +14,11 @@
 
 
 
+(defview (:call-sub-view)
+  (div '(:id "container") (render :basic)))
+	 
+
+
 (deflayout (:application :default t)
   (html nil
 	(head nil
@@ -28,15 +33,15 @@
 
 
 (deflayout (:app-2)
-	   (html nil
-		 (head nil
-		       (title nil (str "Another thingie here")))
+  (html nil
+	(head nil
+	      (title nil (str "Another thingie here")))
 
-		 (body nil
-		       (yield)
-		       (div '(:id "footer")
-			    (p nil (str "Bla bla"))))))
-		       
+	(body nil
+	      (yield)
+	      (div '(:id "footer")
+		   (p nil (str "Bla bla"))))))
+
 
 
 

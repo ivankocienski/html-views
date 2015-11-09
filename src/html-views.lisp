@@ -80,7 +80,8 @@
 (defmacro defview ((name &key locals) &body body)
   `(register-view ,name
 		  (lambda (html-output-stream local-vars)
-		    (macrolet ((str (text) `(format html-output-stream "~a" ,text)))
+		    (macrolet ((str (text) `(format html-output-stream "~a" ,text))
+			       (render (name) `(invoke-view html-output-stream ,name local-vars)))
 		      (with-defined-local-pullouts ,locals local-vars
 			(with-defined-tags-for-stream html-output-stream ,+TAG-NAMES+
 			  ,@body))))))

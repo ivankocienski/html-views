@@ -9,7 +9,7 @@
 ;;
 
 (defun init-view-db ()
-  "does a quit sanity check of the view databases"
+  "(internal) does a quit sanity check of the view databases"
   (if (not *view-db*)
       (setf *view-db* (make-hash-table)))
   (if (not *layout-db*)
@@ -17,7 +17,7 @@
   )
 
 (defun register-layout (name codepoint &optional (make-default nil))
-  "store pointer to layout method with name"
+  "(internal) store pointer to layout method with name"
   (init-view-db)
   (setf (gethash name *layout-db*)
 	codepoint)
@@ -25,10 +25,18 @@
       (setf *default-layout* name)))
 
 (defun register-view (name codepoint)
-  "store pointer to view method with name"
+  "(internal) store pointer to view method with name"
   (init-view-db)
   (setf (gethash name *view-db*)
 	codepoint))
+
+(defun invoke-view (s name locals)
+  "(internal) render method for a view"
+  (let ((codepoint (gethash name *view-db*)))
+
+    (if codepoint
+	(funcall codepoint s locals)
+	(error (format nil "view \"~a\" not found" name)))))
 
 ;;
 ;; public API to be used by upstream code
@@ -44,14 +52,11 @@
   (with-output-to-string (s)
     
     (let* ((wants-layout (or layout *default-layout*))
-	   (layout-codepoint (gethash wants-layout *layout-db*))
-	   (codepoint (gethash name *view-db*)))
-
-      (if layout-codepoint 
-	  (if codepoint
-	      (funcall layout-codepoint s locals codepoint)
-	      (error (format nil "view \"~a\" not found" name)))
-	  (error (format nil "layout \"~a\" not found" wants-layout)))))
+	   (layout-codepoint (gethash wants-layout *layout-db*)))
+	   
+	   (if layout-codepoint
+	       (funcall layout-codepoint s locals (lambda (s locals) (invoke-view s name locals)))
+	       (error (format nil "layout \"~a\" not found" wants-layout)))))
   )
 
 (defun list-views ()
