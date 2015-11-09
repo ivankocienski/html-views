@@ -1,6 +1,6 @@
 (in-package :html-view)
 
-(defview :basic
+(defview :basic ()
   (h1 nil (str "hello?")))
 
 (render :basic)
@@ -11,6 +11,22 @@
   (h1 nil (str (format nil "Hello ~s!" name))))
 
 (render :with-bars '((:names . "alpha")))
+
+
+
+(deflayout :application ()
+  (html nil
+	(head nil
+	      (title nil (str "An application"))
+	      (link '(:src "/css/app.css")))
+	
+	(body nil
+	      (h1 nil (str "An application here"))
+	      (yield)
+	      (div '(:id "footer")
+		   (p nil (str "Copyright &copy; Me, Inc. 2015."))))))
+
+
 
 
 
