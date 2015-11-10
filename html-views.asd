@@ -8,6 +8,7 @@
   ;;:depends-on ()
   :components ((:file "src/package")
 	       (:file "src/view-db")
+	       (:file "src/tag-names")
 	       (:file "src/html-views")
 	       (:file "src/demo")))
 

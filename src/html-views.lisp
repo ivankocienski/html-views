@@ -1,28 +1,6 @@
 (in-package :html-view)
 
-(defconstant +TAG-NAMES+
-  ;; ( name . closed)
-  '((div   . nil)
-    (input . T )
-    (p     . nil)
-    (br    . T)
-    (hr    . T)
-    (span  . nil)
-    (a     . nil)
-    (em    . nil)
-    (h1    . nil)
-    (ul    . nil)
-    (li    . nil)
-    (h3    . nil)))
 
-(defconstant +LAYOUT-TAG-NAMES+
-  '((html  . nil)
-    (link  . T)
-    (meta  . T)
-    (title . nil)
-    (head  . nil)
-    (body  . nil)))
-    
     
 (defun tag-attributes (s opts)
   (if opts
@@ -89,16 +67,16 @@
 
 
 (defmacro deflayout ((name &key locals default) &body body)
-  `(register-layout ,name (lambda (html-output-stream local-vars yield-function)
+  `(register-layout ,name
+		    (lambda (html-output-stream local-vars yield-function)
 		 
-		 (macrolet ((str (text) `(format html-output-stream "~a" ,text))
-			    (yield () `(funcall yield-function html-output-stream local-vars)))
-		   
-		   (with-defined-local-pullouts ,locals local-vars
-		     (with-defined-tags-for-stream html-output-stream ,+LAYOUT-TAG-NAMES+
-		       (with-defined-tags-for-stream html-output-stream ,+TAG-NAMES+
-			 ,@body)))))
-		    ,default)
-  )
+		      (macrolet ((str (text) `(format html-output-stream "~a" ,text))
+				 (yield () `(funcall yield-function html-output-stream local-vars)))
+			
+			(with-defined-local-pullouts ,locals local-vars
+			  (with-defined-tags-for-stream html-output-stream ,+LAYOUT-TAG-NAMES+
+			    (with-defined-tags-for-stream html-output-stream ,+TAG-NAMES+
+			      ,@body)))))
+		    ,default))
 
 
