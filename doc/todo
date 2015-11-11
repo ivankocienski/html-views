@@ -1,0 +1,23 @@
+
+* merge to master
+* sub views 
+* better tags
+* html version
+* CGI escaping?
+
+- optimize (use of write over format)
+- docs / examples
+
+
+extras
+======
+
+- caching/pre-rendering?
+- hueristic for not typing (h1 nil thing) but instead (h1 thing)?
+- pretty printing html output?
+
+
+maybe
+=====
+
+- merge different tag lists?

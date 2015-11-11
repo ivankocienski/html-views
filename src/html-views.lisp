@@ -59,6 +59,7 @@
   `(register-view ,name
 		  (lambda (html-output-stream local-vars)
 		    (macrolet ((str (text) `(format html-output-stream "~a" ,text))
+			       (str-esc (text) `(escape-to-stream html-output-stream text))
 			       (render (name) `(invoke-view html-output-stream ,name local-vars)))
 		      (with-defined-local-pullouts ,locals local-vars
 			(with-defined-tags-for-stream html-output-stream ,+TAG-NAMES+
@@ -71,6 +72,7 @@
 		    (lambda (html-output-stream local-vars yield-function)
 		 
 		      (macrolet ((str (text) `(format html-output-stream "~a" ,text))
+				 (str-esc (text) `(escape-to-stream html-output-stream text))
 				 (yield () `(funcall yield-function html-output-stream local-vars)))
 			
 			(with-defined-local-pullouts ,locals local-vars

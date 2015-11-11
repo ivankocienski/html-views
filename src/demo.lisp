@@ -43,6 +43,16 @@
 		   (p nil (str "Bla bla"))))))
 
 
+(defun escape-to-stream (s string)
+  (loop for char across string
+     do (case char
+	  (#\< (write-sequence "&lt;" s))
+	  (#\> (write-sequence "&gt;" s))
+	  (#\& (write-sequence "&amp;" s))
+	  (#\' (write-sequence "&#039;" s))
+	  (#\" (write-sequence "&quot;" s))
+	  (t (write-sequence char s)))))
+
 
 
 #|
