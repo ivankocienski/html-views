@@ -9,6 +9,7 @@
   :components ((:file "src/package")
 	       (:file "src/view-db")
 	       (:file "src/tag-names")
+	       (:file "src/doc-type")
 	       (:file "src/html-views")
 	       (:file "src/demo")))
 

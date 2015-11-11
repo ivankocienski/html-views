@@ -76,6 +76,7 @@
 			(with-defined-local-pullouts ,locals local-vars
 			  (with-defined-tags-for-stream html-output-stream ,+LAYOUT-TAG-NAMES+
 			    (with-defined-tags-for-stream html-output-stream ,+TAG-NAMES+
+			      (write-doctype html-output-stream)
 			      ,@body)))))
 		    ,default))
 
