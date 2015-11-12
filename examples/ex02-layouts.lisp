@@ -1,5 +1,7 @@
 (in-package :html-view)
 
+(nuke-views)
+
 ;;
 ;; 05 basic layout
 ;;

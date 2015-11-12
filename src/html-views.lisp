@@ -81,7 +81,8 @@
 		 
 		      (macrolet ((str (text) `(princ ,text html-output-stream))
 				 (str-esc (text) `(escape-to-stream html-output-stream ,text))
-				 (yield () `(funcall yield-function html-output-stream local-vars)))
+				 (yield () `(funcall yield-function html-output-stream local-vars))
+				 (render (name &optional local-overides) `(invoke-view html-output-stream ,name (append ,local-overides local-vars))))
 			
 			(with-defined-local-pullouts ,locals local-vars
 			  (with-defined-tags-for-stream html-output-stream ,+LAYOUT-TAG-NAMES+

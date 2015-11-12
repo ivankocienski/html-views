@@ -1,5 +1,9 @@
 (in-package :html-view)
 
+;; reset the view database. clears
+;; all rendered views and layouts
+(nuke-views)
+
 ;;
 ;; 01 real simple
 ;;
