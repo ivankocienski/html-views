@@ -26,17 +26,25 @@
 
 	      (list name `(&optional (args nil) &body body)
 		    (if closed `(declare (ignore body)))
-		    
-		    ``(progn
-			(princ ,',(format nil "<~a" name-s) ,',s)
-			(tag-attributes ,',s ,args))
+
+		    ;; TODO FIXME: er- for some reason if you
+		    ;; use double back quotes they turn into a regular
+		    ;; single quote if used more than once. aint
+		    ;; lisp magical?
+		    ;;``(progn
+			;;(princ ,',(format nil "<~a" name-s) ,',s))
+			;;(tag-attributes ,',s ,args))
 		    
 		    (if closed
 
-			``(progn
+			``(progn	       
+			    (princ ,',(format nil "<~a" name-s) ,',s)
+			    (tag-attributes ,',s ,args)
 			    (princ "/>" ,',s))
 			
 			``(progn
+			    (princ ,',(format nil "<~a" name-s) ,',s)
+			    (tag-attributes ,',s ,args)
 			    (princ ">" ,',s)
 			    (progn ,@body)
 			    (princ ,',(format nil "</~a>" name-s) ,',s)
@@ -44,6 +52,7 @@
 	  tag-list))
 
 (defmacro with-defined-tags-for-stream (s tag-list &body body)
+  (format t "type=~s~%" (type-of tag-list))
   `(macrolet (,@(tag-definitions s tag-list))
      ,@body))
 
