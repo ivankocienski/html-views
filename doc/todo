@@ -4,9 +4,11 @@
 * better tags
 * html version
 * CGI escaping?
+* optimize (use of write over format)
+* if layout is nil then just render raw html from view
 
-- optimize (use of write over format)
 - docs / examples
+
 
 
 extras
@@ -15,6 +17,7 @@ extras
 - caching/pre-rendering?
 - hueristic for not typing (h1 nil thing) but instead (h1 thing)?
 - pretty printing html output?
+- alphabetize list-views
 
 
 maybe

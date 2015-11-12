@@ -43,7 +43,7 @@
 ;;
 
 
-(defun render (name &key (locals nil) (layout nil))
+(defun render (name &key (locals nil) (layout nil layout-supplied))
   "renders a given view with layout"
   (init-view-db)
   (if (null *default-layout*)
@@ -51,12 +51,14 @@
   
   (with-output-to-string (s)
     
-    (let* ((wants-layout (or layout *default-layout*))
-	   (layout-codepoint (gethash wants-layout *layout-db*)))
-	   
+    (let* ((wants-layout (if layout-supplied layout *default-layout*))
+	   (layout-codepoint (if wants-layout (gethash wants-layout *layout-db*))))
+
+      (if wants-layout
 	   (if layout-codepoint
 	       (funcall layout-codepoint s locals (lambda (s locals) (invoke-view s name locals)))
-	       (error (format nil "layout \"~a\" not found" wants-layout)))))
+	       (error (format nil "layout \"~a\" not found" wants-layout)))
+	   (invoke-view s name locals))))
   )
 
 (defun list-views ()
@@ -88,5 +90,8 @@
 	  (#\" (write-sequence "&quot;" s))
 	  (t   (princ char s)))))
 
+(defun escape-string (string)
+  (with-output-to-string (s)
+    (escape-to-stream s string)))
 
 
