@@ -6,8 +6,8 @@
 * CGI escaping?
 * optimize (use of write over format)
 * if layout is nil then just render raw html from view
-
-- docs / examples
+* examples
+* locals override in render
 
 
 
@@ -18,6 +18,8 @@ extras
 - hueristic for not typing (h1 nil thing) but instead (h1 thing)?
 - pretty printing html output?
 - alphabetize list-views
+- more examples
+	- complex example
 
 
 maybe

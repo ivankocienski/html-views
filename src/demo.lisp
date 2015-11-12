@@ -1,7 +1,8 @@
 (in-package :html-view)
 
-(defview :basic ()
-  (h1 nil (str "hello?")))
+(defview (:basic)
+  (h1 nil (str "hello?"))
+  (hr))
 
 (render :basic)
 

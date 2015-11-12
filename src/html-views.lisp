@@ -52,7 +52,6 @@
 	  tag-list))
 
 (defmacro with-defined-tags-for-stream (s tag-list &body body)
-  (format t "type=~s~%" (type-of tag-list))
   `(macrolet (,@(tag-definitions s tag-list))
      ,@body))
 
@@ -69,7 +68,7 @@
 		  (lambda (html-output-stream local-vars)
 		    (macrolet ((str (text) `(princ ,text html-output-stream))
 			       (str-esc (text) `(escape-to-stream html-output-stream ,text))
-			       (render (name) `(invoke-view html-output-stream ,name local-vars)))
+			       (render (name &optional local-overides) `(invoke-view html-output-stream ,name (append ,local-overides local-vars))))
 		      (with-defined-local-pullouts ,locals local-vars
 			(with-defined-tags-for-stream html-output-stream ,+TAG-NAMES+
 			  ,@body))))))
