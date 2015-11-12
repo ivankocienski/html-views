@@ -27,19 +27,19 @@
 	      (list name `(&optional (args nil) &body body)
 		    (if closed `(declare (ignore body)))
 		    
+		    ``(progn
+			(princ ,',(format nil "<~a" name-s) ,',s)
+			(tag-attributes ,',s ,args))
+		    
 		    (if closed
 
 			``(progn
-			    (format ,',s ,',(format nil "<~a" name-s))
-			    (tag-attributes ,',s ,args)
-			    (format ,',s " />"))
+			    (princ "/>" ,',s))
 			
 			``(progn
-			    (format ,',s ,',(format nil "<~a" name-s))
-			    (tag-attributes ,',s ,args)
-			    (format ,',s ">")
+			    (princ ">" ,',s)
 			    (progn ,@body)
-			    (format ,',s ,',(format nil "</~a>" name-s))
+			    (princ ,',(format nil "</~a>" name-s) ,',s)
 			    )))))
 	  tag-list))
 
@@ -58,7 +58,7 @@
 (defmacro defview ((name &key locals) &body body)
   `(register-view ,name
 		  (lambda (html-output-stream local-vars)
-		    (macrolet ((str (text) `(format html-output-stream "~a" ,text))
+		    (macrolet ((str (text) `(princ ,text html-output-stream))
 			       (str-esc (text) `(escape-to-stream html-output-stream text))
 			       (render (name) `(invoke-view html-output-stream ,name local-vars)))
 		      (with-defined-local-pullouts ,locals local-vars
@@ -71,7 +71,7 @@
   `(register-layout ,name
 		    (lambda (html-output-stream local-vars yield-function)
 		 
-		      (macrolet ((str (text) `(format html-output-stream "~a" ,text))
+		      (macrolet ((str (text) `(princ ,text html-output-stream))
 				 (str-esc (text) `(escape-to-stream html-output-stream text))
 				 (yield () `(funcall yield-function html-output-stream local-vars)))
 			
