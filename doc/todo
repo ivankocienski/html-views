@@ -8,6 +8,7 @@
 * if layout is nil then just render raw html from view
 * examples
 * locals override in render
+* alphabetize list-views
 
 
 
@@ -17,9 +18,9 @@ extras
 - caching/pre-rendering?
 - hueristic for not typing (h1 nil thing) but instead (h1 thing)?
 - pretty printing html output?
-- alphabetize list-views
 - more examples
 	- complex example
+- render to a given stream (not just strings)
 
 
 maybe

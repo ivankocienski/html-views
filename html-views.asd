@@ -7,6 +7,7 @@
   :serial t
   ;;:depends-on ()
   :components ((:file "src/package")
+	       (:file "src/util")
 	       (:file "src/view-db")
 	       (:file "src/tag-names")
 	       (:file "src/doc-type")

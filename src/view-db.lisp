@@ -63,15 +63,22 @@
 
 (defun list-views ()
   "dumps info about view databases"
-  (maphash (lambda (n _)
-	     (declare (ignore _))
-	     (format t "layout ~a ~a~%" n (if (eq n *default-layout*) "(default)")))
-	   *layout-db*)
-  
-  (maphash (lambda (n _)
-	     (declare (ignore _))
-	     (format t "view  ~a~%" n))
-	   *view-db*))
+  (labels ((sorted-keys-for (hash)
+	     (sort (hash-keys hash) (lambda (a b) (keyword<= a b)))))
+    
+    (let ((sorted-views   (sorted-keys-for *view-db*))
+	  (sorted-layouts (sorted-keys-for *layout-db*)))
+
+      (format t "layouts: (~d found)~%" (length sorted-layouts))
+      (mapcar (lambda (n)
+		(format t "  ~a ~a~%" n (if (eq n *default-layout*) "(default)" "")))
+	      sorted-layouts)
+
+      (format t "views: (~d found)~%" (length sorted-views))
+      (mapcar (lambda (n)
+		(format t "  ~a~%" n))
+	      sorted-views)))
+  nil)
 
 (defun nuke-views ()
   "clear all the view databases"
@@ -79,19 +86,5 @@
 	*layout-db* nil
 	*default-layout* nil))
 
-
-(defun escape-to-stream (s string)
-  (loop for char across string
-     do (case char
-	  (#\< (write-sequence "&lt;"   s))
-	  (#\> (write-sequence "&gt;"   s))
-	  (#\& (write-sequence "&amp;"  s))
-	  (#\' (write-sequence "&#039;" s))
-	  (#\" (write-sequence "&quot;" s))
-	  (t   (princ char s)))))
-
-(defun escape-string (string)
-  (with-output-to-string (s)
-    (escape-to-stream s string)))
 
 
