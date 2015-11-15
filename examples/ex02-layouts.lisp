@@ -1,4 +1,4 @@
-(in-package :html-view)
+(in-package :html-view-examples)
 
 (nuke-views)
 

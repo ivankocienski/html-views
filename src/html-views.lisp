@@ -1,4 +1,4 @@
-(in-package :html-view)
+(in-package :html-views)
 
 
     
@@ -21,10 +21,11 @@
 (defmethod tag-definitions (s tag-list)
   (mapcar (lambda (tl)
 	    (let* ((name (car tl))
+		   (name-symbol (intern (format nil "~a" name) *package*))
 		   (name-s (string-downcase (format nil "~a" name)))
 		   (closed (cdr tl)))
 
-	      (list name `(&optional (args nil) &body body)
+	      (list name-symbol `(&optional (args nil) &body body)
 		    (if closed `(declare (ignore body)))
 
 		    ;; TODO FIXME: er- for some reason if you
@@ -66,9 +67,12 @@
 (defmacro defview ((name &key locals) &body body)
   `(register-view ,name
 		  (lambda (html-output-stream local-vars)
-		    (macrolet ((str (text) `(princ ,text html-output-stream))
-			       (str-esc (text) `(escape-to-stream html-output-stream ,text))
-			       (render (name &optional local-overides) `(invoke-view html-output-stream ,name (append ,local-overides local-vars))))
+		    (declare (ignorable local-vars)
+			     (ignorable html-output-stream))
+		    
+		    (macrolet ((,(intern "STR" *package*) (text) `(princ ,text html-output-stream))
+			       (,(intern "STR-ESC" *package*) (text) `(escape-to-stream html-output-stream ,text))
+			       (,(intern "RENDER" *package*) (name &optional local-overides) `(invoke-view html-output-stream ,name (append ,local-overides local-vars))))
 		      (with-defined-local-pullouts ,locals local-vars
 			(with-defined-tags-for-stream html-output-stream ,+TAG-NAMES+
 			  ,@body))))))
@@ -78,11 +82,14 @@
 (defmacro deflayout ((name &key locals default) &body body)
   `(register-layout ,name
 		    (lambda (html-output-stream local-vars yield-function)
-		 
-		      (macrolet ((str (text) `(princ ,text html-output-stream))
-				 (str-esc (text) `(escape-to-stream html-output-stream ,text))
-				 (yield () `(funcall yield-function html-output-stream local-vars))
-				 (render (name &optional local-overides) `(invoke-view html-output-stream ,name (append ,local-overides local-vars))))
+		      (declare (ignorable local-vars)
+			       (ignorable html-output-stream)
+			       (ignorable yield-function))
+		      
+		      (macrolet ((,(intern "STR" *package*) (text) `(princ ,text html-output-stream))
+				 (,(intern "STR-ESC" *package*) (text) `(escape-to-stream html-output-stream ,text))
+				 (,(intern "YIELD" *package*)  () `(funcall yield-function html-output-stream local-vars))
+				 (,(intern "RENDER" *package*) (name &optional local-overides) `(invoke-view html-output-stream ,name (append ,local-overides local-vars))))
 			
 			(with-defined-local-pullouts ,locals local-vars
 			  (with-defined-tags-for-stream html-output-stream ,+LAYOUT-TAG-NAMES+

@@ -1,4 +1,4 @@
-(in-package :html-view)
+(in-package :html-views)
 
 (defconstant +DOC-TYPES+
   '((:ver-1.1 . "html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\"")

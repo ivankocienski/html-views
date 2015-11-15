@@ -9,6 +9,11 @@
 * examples
 * locals override in render
 * alphabetize list-views
+* remove demo.lisp and hacks.lisp
+* readme
+
+- package examples
+- test on fresh instance
 
 
 

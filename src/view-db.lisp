@@ -1,4 +1,4 @@
-(in-package :html-view)
+(in-package :html-views)
 
 (defparameter *view-db* nil)
 (defparameter *layout-db* nil)
@@ -46,8 +46,8 @@
 (defun render (name &key (locals nil) (layout nil layout-supplied))
   "renders a given view with layout"
   (init-view-db)
-  (if (null *default-layout*)
-      (error "You have not set a default layout"))
+  ;;(if (null *default-layout*)
+  ;;    (error "You have not set a default layout"))
   
   (with-output-to-string (s)
     
@@ -63,6 +63,7 @@
 
 (defun list-views ()
   "dumps info about view databases"
+  (init-view-db)
   (labels ((sorted-keys-for (hash)
 	     (sort (hash-keys hash) (lambda (a b) (keyword<= a b)))))
     

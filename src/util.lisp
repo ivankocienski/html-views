@@ -1,4 +1,4 @@
-(in-package :html-view)
+(in-package :html-views)
 
 (defun hash-keys (table)
   "returns a list of keys for a hash"
@@ -27,3 +27,7 @@ non-html compliant characters (<>&'\") with their &__; equivalant"
 circumstances"
   (with-output-to-string (s)
     (escape-to-stream s string)))
+
+(defun intern (thing)
+  (intern thing *package*)
+  )

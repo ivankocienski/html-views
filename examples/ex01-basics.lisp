@@ -1,4 +1,5 @@
-(in-package :html-view)
+
+(in-package :html-view-examples)
 
 ;; reset the view database. clears
 ;; all rendered views and layouts

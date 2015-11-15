@@ -1,4 +1,10 @@
 (in-package :cl-user)
 
-(defpackage :html-view
-  (:use :cl))
+(defpackage :html-views
+  (:use :cl)
+  (:export :render
+	   :list-views
+	   :nuke-views
+	   :set-doctype
+	   :deflayout
+	   :defview))
