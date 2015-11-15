@@ -27,7 +27,3 @@ non-html compliant characters (<>&'\") with their &__; equivalant"
 circumstances"
   (with-output-to-string (s)
     (escape-to-stream s string)))
-
-(defun intern (thing)
-  (intern thing *package*)
-  )
