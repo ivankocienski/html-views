@@ -10,7 +10,7 @@
 	
 	(if value
 	    (format s
-		    " \"~a\"=\"~a\""
+		    " ~a=\"~a\""
 		    name
 		    (if (eq (type-of value) 'boolean)
 			name
