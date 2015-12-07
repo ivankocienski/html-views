@@ -11,7 +11,7 @@
     (bdo        . nil)
     (blockquote . nil)
     (br         . t)
-    (button     . t)
+    (button     . nil)
     (caption    . nil)
     (cite       . nil)
     (code       . nil)
